@@ -11,8 +11,8 @@ end
 
 immutable StingerBenchmarks <: GraphBenchmarkSpec end
 
-immutable SerialBFS <: BFS end
-immutable LevelSynchronousBFS <: BFS end
+immutable SerialBFS <: AbstractBFS end
+immutable LevelSynchronousBFS <: AbstractBFS end
 
 function construct(t::Type{StingerGraph}, edges::Array{Int64, 2})
     s = Stinger()

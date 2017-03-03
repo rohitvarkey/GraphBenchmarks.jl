@@ -2,20 +2,21 @@ module GraphBenchmarks
 
 using BenchmarkTools
 
-export benchmark, GraphGenerator, GraphAlgorithm, GraphBenchmarkSpec, GraphType, Graph500, BFS
+export benchmark, GraphGenerator, GraphAlgorithm, GraphBenchmarkSpec, GraphType, Graph500, BFS, AbstractBFS
 
 abstract GraphGenerator
 abstract GraphAlgorithm
 abstract GraphBenchmarkSpec
 abstract GraphType
 
-abstract BFS <: GraphAlgorithm
+abstract AbstractBFS <: GraphAlgorithm
+immutable BFS <: AbstractBFS end
 
 immutable Graph500 <: GraphBenchmarkSpec end
 
 include("generators/kronecker.jl")
-include("stinger.jl")
-include("lg.jl")
+#include("stinger.jl") Uncomment to add StingerWrapper benchmarks
+include("examples/lg.jl")
 
 function benchmark{B <: GraphBenchmarkSpec, T <: GraphType, A <: GraphAlgorithm, G <: GraphGenerator}(
         benchmark::B,
@@ -28,7 +29,7 @@ function benchmark{B <: GraphBenchmarkSpec, T <: GraphType, A <: GraphAlgorithm,
     edges = generate(generator)
 
     #construct a graph `g` of type `t` with the edges in `edges`
-	g = construct(t, edges) #This returns the graph representation - eg. Stinger or LG.Graph
+	g = construct(t, edges)
 
     #Alternatively, we could have `generate(t, generator)` that does both of these steps together.
     #Allows for the generator to not have to generate the entire edge list
