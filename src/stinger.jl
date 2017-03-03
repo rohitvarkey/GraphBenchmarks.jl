@@ -9,7 +9,7 @@ immutable StingerGraph <: GraphType
     nv::Int64
 end
 
-immutable StingerBenchmarks <: GraphBenchmark end
+immutable StingerBenchmarks <: GraphBenchmarkSpec end
 
 immutable SerialBFS <: BFS end
 immutable LevelSynchronousBFS <: BFS end
@@ -22,17 +22,13 @@ function construct(t::Type{StingerGraph}, edges::Array{Int64, 2})
     StingerGraph(s, maximum(edges)) #max number of active vertices
 end
 
-function picksources(::Graph500, alg::BFS, g::StingerGraph)
+function picksources(::StingerBenchmarks, alg::BFS, g::GraphType)
     srand(0)
-    sources = rand(0:g.nv-1, 64)
+    sources = collect(1:1000)
 end
 
-function picksources(::StingerBenchmarks, alg::BFS, g::StingerGraph)
-    sources = collect(0:1000)
-end
-
-function runbench(benchmark::GraphBenchmark, alg::SerialBFS, g::StingerGraph)
-    sources = picksources(benchmark, alg, g)
+function runbench(benchmark::GraphBenchmarkSpec, alg::SerialBFS, g::StingerGraph)
+    sources = picksources(benchmark, alg, g) - 1
     bfsbench = @benchmarkable begin
         for src in $sources
             StingerWrapper.bfs($(g.s), src, $(g.nv))
@@ -41,8 +37,8 @@ function runbench(benchmark::GraphBenchmark, alg::SerialBFS, g::StingerGraph)
     trial = run(bfsbench)
 end
 
-function runbench(benchmark::GraphBenchmark, alg::LevelSynchronousBFS, g::StingerGraph)
-    sources = picksources(benchmark, alg, g)
+function runbench(benchmark::GraphBenchmarkSpec, alg::LevelSynchronousBFS, g::StingerGraph)
+    sources = picksources(benchmark, alg, g) - 1
     bfsbench = @benchmarkable begin
         for src in $sources
             StingerWrapper.bfs(StingerWrapper.LevelSynchronous(), $(g.s), src, $(g.nv))

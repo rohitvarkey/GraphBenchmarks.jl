@@ -2,22 +2,21 @@ module GraphBenchmarks
 
 using BenchmarkTools
 
-export benchmark, GraphGenerator, GraphAlgorithm, GraphBenchmark, GraphType, Graph500, BFS
+export benchmark, GraphGenerator, GraphAlgorithm, GraphBenchmarkSpec, GraphType, Graph500, BFS
 
 abstract GraphGenerator
 abstract GraphAlgorithm
-abstract GraphBenchmark
+abstract GraphBenchmarkSpec
 abstract GraphType
 
 abstract BFS <: GraphAlgorithm
 
-immutable Graph500 <: GraphBenchmark end
+immutable Graph500 <: GraphBenchmarkSpec end
 
 include("generators/kronecker.jl")
 include("stinger.jl")
 
-
-function benchmark{B <: GraphBenchmark, T <: GraphType, A <: GraphAlgorithm, G <: GraphGenerator}(
+function benchmark{B <: GraphBenchmarkSpec, T <: GraphType, A <: GraphAlgorithm, G <: GraphGenerator}(
         benchmark::B,
         t::Type{T},
         alg::A,
@@ -36,6 +35,11 @@ function benchmark{B <: GraphBenchmark, T <: GraphType, A <: GraphAlgorithm, G <
     trial = runbench(benchmark, alg, g)
     @show minimum(trial)
     trial
+end
+
+function picksources(::Graph500, alg::BFS, g::GraphType)
+    srand(0)
+    sources = rand(1:g.nv, 64)
 end
 
 end
