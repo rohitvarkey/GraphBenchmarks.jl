@@ -59,7 +59,7 @@ other benchmark specifications can be implemented.
 - `GraphAlgorithm` - This decides the algorithm to be run. Mostly a stub to help on
 dispatch but can be used to encode parameters required for an algorithm.
 - `GraphGenerator` - Create a generator. Generators must implement a `generate` method that
-returns the edge array. See the example `Kronecker` [generator](`src/generators/kronecker.jl`).
+returns the edge array. See the example `Kronecker` [generator](src/generators/kronecker.jl).
 
 ### Defining the benchmark
 
@@ -70,7 +70,7 @@ configured in the package.
 
 ### Examples
 
-See [LightGraphs](`src/examples/lg.jl`) and [StingerWrapper](`src/examples/stinger.jl`) as examples
+See [LightGraphs](src/examples/lg.jl) and [StingerWrapper](src/examples/stinger.jl) as examples
 on using the interface and the [tests](test/runtests.jl) to see an example workflow.
 
 *NOTE: This is a prototype and the interface is subject to change.*
