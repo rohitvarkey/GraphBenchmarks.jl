@@ -15,6 +15,7 @@ immutable Graph500 <: GraphBenchmarkSpec end
 
 include("generators/kronecker.jl")
 include("stinger.jl")
+include("lg.jl")
 
 function benchmark{B <: GraphBenchmarkSpec, T <: GraphType, A <: GraphAlgorithm, G <: GraphGenerator}(
         benchmark::B,
@@ -37,9 +38,9 @@ function benchmark{B <: GraphBenchmarkSpec, T <: GraphType, A <: GraphAlgorithm,
     trial
 end
 
-function picksources(::Graph500, alg::BFS, g::GraphType)
+function picksources(::Graph500, nv::Int64)
     srand(0)
-    sources = rand(1:g.nv, 64)
+    sources = rand(1:nv, 64)
 end
 
 end
