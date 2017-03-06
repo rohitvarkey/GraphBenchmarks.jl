@@ -1,6 +1,9 @@
 using LightGraphs
+using GraphBenchmarks
+import GraphBenchmarks: construct, preparebench
+using BenchmarkTools
 
-export LGGraph
+export LGGraph, construct
 
 immutable LGGraph{T<:SimpleGraph} <: GraphType
     g::T
@@ -14,7 +17,7 @@ function construct{T <: SimpleGraph}(t::Type{LGGraph{T}}, edges::Array{Int64, 2}
     LGGraph(g)
 end
 
-function runbench(benchmark::GraphBenchmarkSpec, alg::BFS, lg::LGGraph)
+function preparebench(benchmark::GraphBenchmarkSpec, alg::BFS, lg::LGGraph)
     n = nv(lg.g)
     sources = picksources(benchmark, n)
     visitor = LightGraphs.TreeBFSVisitorVector(zeros(Int,n))
@@ -23,5 +26,5 @@ function runbench(benchmark::GraphBenchmarkSpec, alg::BFS, lg::LGGraph)
             LightGraphs.bfs_tree!($visitor, $(lg.g), src)
         end
     end seconds=6000 samples=10
-    trial = run(bfsbench)
+    bfsbench
 end

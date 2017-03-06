@@ -1,4 +1,7 @@
 using StingerWrapper
+using BenchmarkTools
+using GraphBenchmarks
+import GraphBenchmarks: construct, preparebench, picksources
 
 import StingerWrapper: bfs
 
@@ -26,22 +29,22 @@ function picksources(::StingerBenchmarks, nv::Int64)
     sources = collect(1:1000)
 end
 
-function runbench(benchmark::GraphBenchmarkSpec, alg::SerialBFS, g::StingerGraph)
+function preparebench(benchmark::GraphBenchmarkSpec, alg::SerialBFS, g::StingerGraph)
     sources = picksources(benchmark, g.nv) - 1
     bfsbench = @benchmarkable begin
         for src in $sources
             StingerWrapper.bfs($(g.s), src, $(g.nv))
         end
     end seconds=6000 samples=10
-    trial = run(bfsbench)
+    bfsbench
 end
 
-function runbench(benchmark::GraphBenchmarkSpec, alg::LevelSynchronousBFS, g::StingerGraph)
+function preparebench(benchmark::GraphBenchmarkSpec, alg::LevelSynchronousBFS, g::StingerGraph)
     sources = picksources(benchmark, g.nv) - 1
     bfsbench = @benchmarkable begin
         for src in $sources
             StingerWrapper.bfs(StingerWrapper.LevelSynchronous(), $(g.s), src, $(g.nv))
         end
     end seconds=6000 samples=10
-    trial = run(bfsbench)
+    bfsbench
 end
