@@ -4,7 +4,6 @@ using Base.Threads.Atomic
 using LightGraphs
 using GraphBenchmarks
 using BenchmarkTools
-using JLD
 using UnsafeAtomics
 
 import Base: push!, shift!, isempty, getindex
