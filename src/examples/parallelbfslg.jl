@@ -150,11 +150,13 @@ end
 function bfsbenchsuite{T <: SimpleGraph}(t::Type{T}, bench::GraphBenchmarkSpec, scale::Int, edgefactor::Int)
     srand(0)
     gen = Kronecker(scale, edgefactor)
-    suite = BenchmarkGroup()
-    suite["lgbfs"] = preparebenchmark(bench, LGGraph{T}, BFS(), gen)
-    suite["naivebfs"] = preparebenchmark(bench, LGGraph{T}, NaiveSerialBFS(), gen)
-    suite["parallbfs"] = preparebenchmark(bench, LGGraph{T}, ParallBFS(), gen)
-    suite["levelsyncbfs"] = preparebenchmark(bench, LGGraph{T}, LevelSynchronous(), gen)
+    suite = BenchmarkGroup(["bfs", "lg"])
+    suite["serial"] = BenchmarkGroup(["serialbfs"])
+    suite["serial"]["lgbfs"] = preparebenchmark(bench, LGGraph{T}, BFS(), gen)
+    suite["serial"]["naivebfs"] = preparebenchmark(bench, LGGraph{T}, NaiveSerialBFS(), gen)
+    suite["parallel"] = BenchmarkGroup(["parallelbfs"])
+    suite["parallel"]["parallbfs"] = preparebenchmark(bench, LGGraph{T}, ParallBFS(), gen)
+    suite["parallel"]["levelsyncbfs"] = preparebenchmark(bench, LGGraph{T}, LevelSynchronous(), gen)
     suite
 end
 

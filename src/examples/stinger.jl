@@ -52,9 +52,11 @@ end
 function bfsbenchsuite(T::Type{StingerGraph}, bench::GraphBenchmarkSpec, scale::Int, edgefactor::Int)
     srand(0)
     gen = Kronecker(scale, edgefactor)
-    suite = BenchmarkGroup()
-    suite["stingerserialbfs"] = preparebenchmark(bench, T, SerialBFS(), gen)
-    suite["levelsyncbfs"] = preparebenchmark(bench, T, LevelSynchronousBFS(), gen)
+    suite = BenchmarkGroup(["bfs", "stinger"])
+    suite["serial"] = BenchmarkGroup(["serialbfs"])
+    suite["serial"]["stingerserialbfs"] = preparebenchmark(bench, T, SerialBFS(), gen)
+    suite["parallel"] = BenchmarkGroup(["parallelbfs"])
+    suite["parallel"]["levelsyncbfs"] = preparebenchmark(bench, T, LevelSynchronousBFS(), gen)
     suite
 end
 
