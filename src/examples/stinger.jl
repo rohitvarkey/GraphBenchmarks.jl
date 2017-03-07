@@ -48,3 +48,17 @@ function preparebench(benchmark::GraphBenchmarkSpec, alg::LevelSynchronousBFS, g
     end seconds=6000 samples=10
     bfsbench
 end
+
+function bfsbenchsuite(T::Type{StingerGraph}, bench::GraphBenchmarkSpec, scale::Int, edgefactor::Int)
+    srand(0)
+    gen = Kronecker(scale, edgefactor)
+    suite = BenchmarkGroup()
+    suite["stingerserialbfs"] = preparebenchmark(bench, T, SerialBFS(), gen)
+    suite["levelsyncbfs"] = preparebenchmark(bench, T, LevelSynchronousBFS(), gen)
+    suite
+end
+
+function comparebfs(T::Type{StingerGraph}, bench::GraphBenchmarkSpec, scale::Int, edgefactor::Int)
+    suite = bfsbenchsuite(T, bench, scale, edgefactor)
+    run(suite, verbose=true)
+end

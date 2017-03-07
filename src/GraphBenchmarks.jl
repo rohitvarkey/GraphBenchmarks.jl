@@ -3,7 +3,8 @@ module GraphBenchmarks
 using BenchmarkTools
 
 export benchmark, GraphGenerator, GraphAlgorithm, GraphBenchmarkSpec, GraphType,
-       Graph500, BFS, AbstractBFS, construct, preparebench, picksources
+       Graph500, BFS, AbstractBFS, construct, preparebench, picksources,
+       preparebenchmark, generate
 
 abstract GraphGenerator
 abstract GraphAlgorithm
